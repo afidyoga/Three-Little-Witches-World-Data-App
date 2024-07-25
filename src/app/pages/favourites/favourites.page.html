@@ -1,0 +1,75 @@
+<!--This includes an ion-header with a toolbar, ion-buttons, and ion-title.
+  The ion-content section contains an ion-grid with ion-row and ion-col elements.
+  Inside the ion-col, there is a loop that displays a list of country cards based
+  on the countries array. Each country card can be either a regular country item or 
+  a detail item, depending on the value of the countryChosen variable.
+  If there are no countries in the favorites list, a message card is displayed.
+  The code also includes some conditional rendering based on the values of countryChosen
+  and loadingInfo variables.-->
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button />
+      @if (countryChosen) {
+      <ion-button (click)="backToList()">
+        <ion-icon name="arrow-back-circle-outline" size="large" class="list-back-arrow">
+        </ion-icon>
+      </ion-button>
+      }
+    </ion-buttons>
+
+    <ion-title class="ion-text-center">
+      <ion-icon [class]="!countryChosen ? 'icon' : 'icon icon-center'" name="heart" size="large">
+      </ion-icon>
+    </ion-title>
+
+    <ion-buttons slot="end">
+      @if (countries.length > 0 && !countryChosen) {
+      <ion-button (click)="presentPopover($event)">
+        <ion-icon class="popover-icon" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+      </ion-button>
+      }
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid class="ion-no-padding">
+    <ion-row>
+      <ion-col size="12" size-sm="8" size-ms="8" size-xl="6" offset-sm="2" class="ion-no-padding">
+        @if (!loadingInfo && countries.length > 0) {
+        <!--display list of favourite countries-->
+        @for (country of countries; track country) {
+        <div class="country-card">
+          @if (!countryChosen) {
+          <app-country-item [country]="country" [isFavourite]="isFavourite" (click)="onShowCountryDetail()">
+          </app-country-item>
+          }
+          <!--display chosen country-->
+          @if (countryChosen) {
+          <app-detail-item [country]="country">
+          </app-detail-item>
+          }
+        </div>
+        }
+        }
+
+        @if (!countries.length) {
+        <ion-card>
+          <div class="image-div">
+            <img class="mat-card-image" src="../../../assets/imgs/world.jpg" alt="world map view" />
+            <div class="photo-credit">Image from https://www.onlygfx.com</div>
+          </div>
+          <ion-card-content>
+            <h2 class="ion-text-center">
+              There are no countries listed in Favourites
+            </h2>
+          </ion-card-content>
+        </ion-card>
+        }
+
+        <!--if no favourites, show this card-->
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
